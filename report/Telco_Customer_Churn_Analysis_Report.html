@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Telco_Customer_Churn_Analysis_Report.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="telecom-customer-churn--retention-analytics">Telecom Customer Churn &amp; Retention Analytics</h1>
+<h2 id="1-project-overview">1. Project Overview</h2>
+<p>This project analyzes customer churn in the telecommunications industry using Python, Pandas, MySQL, and Power BI.</p>
+<p>Customer churn occurs when customers stop using a company's services. Understanding churn patterns helps businesses identify customer segments that may require better onboarding, service improvements, and retention strategies.</p>
+<p>The project follows an end-to-end data analytics workflow, including data cleaning, exploratory data analysis (EDA), SQL analysis, interactive dashboard development, and business recommendations.</p>
+<h2 id="2-project-objectives">2. Project Objectives</h2>
+<p>The main objectives are:</p>
+<ul>
+<li>Clean and validate the telecom customer dataset.</li>
+<li>Calculate customer churn KPIs.</li>
+<li>Analyze churn across contract types, tenure groups, payment methods, internet services, and technical support.</li>
+<li>Use SQL to answer business questions.</li>
+<li>Build an interactive Power BI dashboard.</li>
+<li>Communicate findings through actionable business recommendations.</li>
+</ul>
+<h2 id="3-tools-and-technologies">3. Tools and Technologies</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>Data preparation and analysis</td>
+</tr>
+<tr>
+<td>Pandas</td>
+<td>Data cleaning and manipulation</td>
+</tr>
+<tr>
+<td>Jupyter Notebook</td>
+<td>Analysis workflow</td>
+</tr>
+<tr>
+<td>Matplotlib</td>
+<td>Data visualization</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>SQL queries and customer segmentation</td>
+</tr>
+<tr>
+<td>Power BI Desktop</td>
+<td>Interactive dashboard</td>
+</tr>
+<tr>
+<td>Markdown</td>
+<td>Project documentation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-dataset-description">4. Dataset Description</h2>
+<p>The project uses IBM's public Telco Customer Churn sample dataset.</p>
+<p><strong>Dataset source:</strong> <a href="https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv">IBM Telco Customer Churn CSV</a></p>
+<p>The original dataset contains 7,043 customer records and 21 columns.</p>
+<p>Important fields include:</p>
+<ul>
+<li><code>customerID</code> — unique customer identifier</li>
+<li><code>gender</code> — customer gender</li>
+<li><code>SeniorCitizen</code> — senior-citizen indicator</li>
+<li><code>tenure</code> — number of months with the company</li>
+<li><code>Contract</code> — contract type</li>
+<li><code>PaymentMethod</code> — payment method</li>
+<li><code>InternetService</code> — internet service type</li>
+<li><code>TechSupport</code> — technical support subscription</li>
+<li><code>MonthlyCharges</code> — monthly customer charges</li>
+<li><code>TotalCharges</code> — total customer charges</li>
+<li><code>Churn</code> — whether the customer left the company</li>
+</ul>
+<h2 id="5-data-cleaning">5. Data Cleaning</h2>
+<p>Data cleaning was performed in <code>notebooks/01_Data_Cleaning.ipynb</code> using Python and Pandas.</p>
+<p>The steps included:</p>
+<ol>
+<li>Loading and inspecting the raw CSV dataset.</li>
+<li>Checking column names, data types, and missing values.</li>
+<li>Checking for duplicate records and duplicate customer IDs.</li>
+<li>Identifying 11 blank values in <code>TotalCharges</code>.</li>
+<li>Converting <code>TotalCharges</code> to a numeric data type.</li>
+<li>Replacing blank <code>TotalCharges</code> values with zero for customers whose tenure was zero.</li>
+<li>Removing unnecessary leading and trailing whitespace from text fields.</li>
+<li>Saving the cleaned dataset as a CSV file.</li>
+</ol>
+<h3 id="cleaning-validation">Cleaning Validation</h3>
+<table>
+<thead>
+<tr>
+<th>Validation</th>
+<th style="text-align:right">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original records</td>
+<td style="text-align:right">7,043</td>
+</tr>
+<tr>
+<td>Cleaned records</td>
+<td style="text-align:right">7,043</td>
+</tr>
+<tr>
+<td>Columns</td>
+<td style="text-align:right">21</td>
+</tr>
+<tr>
+<td>Duplicate customer IDs</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Missing values after cleaning</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Blank <code>TotalCharges</code> values after cleaning</td>
+<td style="text-align:right">0</td>
+</tr>
+</tbody>
+</table>
+<p>All 7,043 records were preserved during cleaning.</p>
+<h2 id="6-key-performance-indicators">6. Key Performance Indicators</h2>
+<p>The analysis produced the following overall metrics:</p>
+<table>
+<thead>
+<tr>
+<th>KPI</th>
+<th style="text-align:right">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total Customers</td>
+<td style="text-align:right">7,043</td>
+</tr>
+<tr>
+<td>Churned Customers</td>
+<td style="text-align:right">1,869</td>
+</tr>
+<tr>
+<td>Retained Customers</td>
+<td style="text-align:right">5,174</td>
+</tr>
+<tr>
+<td>Overall Churn Rate</td>
+<td style="text-align:right">26.54%</td>
+</tr>
+</tbody>
+</table>
+<p>The churn rate was calculated as:</p>
+<p><strong>Churn Rate = (Churned Customers / Total Customers) × 100</strong></p>
+<p>The resulting churn rate indicates that approximately 26.54% of the customers in this dataset had churned.</p>
+<h2 id="7-exploratory-data-analysis">7. Exploratory Data Analysis</h2>
+<p>Exploratory analysis examined how churn varies across customer groups.</p>
+<h3 id="71-churn-by-contract-type">7.1 Churn by Contract Type</h3>
+<table>
+<thead>
+<tr>
+<th>Contract Type</th>
+<th style="text-align:right">Total Customers</th>
+<th style="text-align:right">Churned Customers</th>
+<th style="text-align:right">Churn Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Month-to-month</td>
+<td style="text-align:right">3,875</td>
+<td style="text-align:right">1,655</td>
+<td style="text-align:right">42.71%</td>
+</tr>
+<tr>
+<td>One year</td>
+<td style="text-align:right">1,473</td>
+<td style="text-align:right">166</td>
+<td style="text-align:right">11.27%</td>
+</tr>
+<tr>
+<td>Two year</td>
+<td style="text-align:right">1,695</td>
+<td style="text-align:right">48</td>
+<td style="text-align:right">2.83%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Finding:</strong> Month-to-month customers have the highest observed churn rate, while customers on two-year contracts have the lowest.</p>
+<h3 id="72-churn-by-customer-tenure">7.2 Churn by Customer Tenure</h3>
+<table>
+<thead>
+<tr>
+<th>Tenure Group</th>
+<th style="text-align:right">Total Customers</th>
+<th style="text-align:right">Churned Customers</th>
+<th style="text-align:right">Churn Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–12 months</td>
+<td style="text-align:right">2,186</td>
+<td style="text-align:right">1,037</td>
+<td style="text-align:right">47.44%</td>
+</tr>
+<tr>
+<td>13–24 months</td>
+<td style="text-align:right">1,024</td>
+<td style="text-align:right">294</td>
+<td style="text-align:right">28.71%</td>
+</tr>
+<tr>
+<td>25–48 months</td>
+<td style="text-align:right">1,594</td>
+<td style="text-align:right">325</td>
+<td style="text-align:right">20.39%</td>
+</tr>
+<tr>
+<td>49–72 months</td>
+<td style="text-align:right">2,239</td>
+<td style="text-align:right">213</td>
+<td style="text-align:right">9.51%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Finding:</strong> Customers in their first year have the highest observed churn rate. Churn rates decrease across the longer-tenure groups.</p>
+<h3 id="73-churn-by-payment-method">7.3 Churn by Payment Method</h3>
+<table>
+<thead>
+<tr>
+<th>Payment Method</th>
+<th style="text-align:right">Total Customers</th>
+<th style="text-align:right">Churned Customers</th>
+<th style="text-align:right">Churn Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Electronic check</td>
+<td style="text-align:right">2,365</td>
+<td style="text-align:right">1,071</td>
+<td style="text-align:right">45.29%</td>
+</tr>
+<tr>
+<td>Mailed check</td>
+<td style="text-align:right">1,612</td>
+<td style="text-align:right">308</td>
+<td style="text-align:right">19.11%</td>
+</tr>
+<tr>
+<td>Bank transfer (automatic)</td>
+<td style="text-align:right">1,544</td>
+<td style="text-align:right">258</td>
+<td style="text-align:right">16.71%</td>
+</tr>
+<tr>
+<td>Credit card (automatic)</td>
+<td style="text-align:right">1,522</td>
+<td style="text-align:right">232</td>
+<td style="text-align:right">15.24%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Finding:</strong> Electronic-check users have the highest observed churn rate among the payment-method groups.</p>
+<h3 id="74-churn-by-internet-service">7.4 Churn by Internet Service</h3>
+<table>
+<thead>
+<tr>
+<th>Internet Service</th>
+<th style="text-align:right">Total Customers</th>
+<th style="text-align:right">Churned Customers</th>
+<th style="text-align:right">Churn Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fiber optic</td>
+<td style="text-align:right">3,096</td>
+<td style="text-align:right">1,297</td>
+<td style="text-align:right">41.89%</td>
+</tr>
+<tr>
+<td>DSL</td>
+<td style="text-align:right">2,421</td>
+<td style="text-align:right">459</td>
+<td style="text-align:right">18.96%</td>
+</tr>
+<tr>
+<td>No internet service</td>
+<td style="text-align:right">1,526</td>
+<td style="text-align:right">113</td>
+<td style="text-align:right">7.40%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Finding:</strong> Fiber-optic customers have the highest observed churn rate among the internet-service groups.</p>
+<h3 id="75-churn-by-technical-support">7.5 Churn by Technical Support</h3>
+<table>
+<thead>
+<tr>
+<th>Technical Support</th>
+<th style="text-align:right">Churn Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No</td>
+<td style="text-align:right">41.64%</td>
+</tr>
+<tr>
+<td>Yes</td>
+<td style="text-align:right">15.17%</td>
+</tr>
+<tr>
+<td>No internet service</td>
+<td style="text-align:right">7.40%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Finding:</strong> Customers without technical support have a higher observed churn rate than customers with support.</p>
+<h3 id="76-churned-vs-retained-customers">7.6 Churned vs. Retained Customers</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align:right">Retained Customers</th>
+<th style="text-align:right">Churned Customers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Average tenure</td>
+<td style="text-align:right">37.57 months</td>
+<td style="text-align:right">17.98 months</td>
+</tr>
+<tr>
+<td>Median tenure</td>
+<td style="text-align:right">38 months</td>
+<td style="text-align:right">10 months</td>
+</tr>
+<tr>
+<td>Average monthly charges</td>
+<td style="text-align:right">61.27</td>
+<td style="text-align:right">74.44</td>
+</tr>
+<tr>
+<td>Average total charges</td>
+<td style="text-align:right">2,549.91</td>
+<td style="text-align:right">1,531.80</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Finding:</strong> Churned customers have a shorter average tenure and higher average monthly charges. Their lower average total charges are consistent with their shorter time as customers.</p>
+<h2 id="8-sql-analysis">8. SQL Analysis</h2>
+<p>MySQL was used to independently validate key findings and segment customer churn.</p>
+<p>The SQL analysis included:</p>
+<ul>
+<li>Overall churn distribution and customer percentages.</li>
+<li>Churn rates by contract type.</li>
+<li>Churn rates by tenure group.</li>
+<li>Churn rates by payment method.</li>
+<li>Churn rates by internet service.</li>
+</ul>
+<p>The queries use SQL aggregations, <code>COUNT</code>, conditional <code>SUM</code>, <code>CASE WHEN</code>, <code>GROUP BY</code>, and percentage calculations.</p>
+<p>The principal results from SQL aligned with those calculated in Python.</p>
+<h2 id="9-power-bi-dashboard">9. Power BI Dashboard</h2>
+<p>The interactive dashboard was created in Power BI Desktop and saved as:</p>
+<p><code>dashboard/Telco_Customer_Churn_Analytics.pbix</code></p>
+<p>The dashboard includes:</p>
+<ul>
+<li>Total Customers KPI card</li>
+<li>Churned Customers KPI card</li>
+<li>Churn Rate KPI card</li>
+<li>Churn Rate by Contract Type chart</li>
+<li>Churn Rate by Tenure Group chart</li>
+<li>Churn Rate by Payment Method chart</li>
+<li>Churn Rate by Internet Service chart</li>
+<li>Churn Rate by Technical Support chart</li>
+<li>Interactive Contract slicer</li>
+</ul>
+<p>The slicer allows users to select contract types and explore how the selected group affects report metrics and charts.</p>
+<h2 id="10-business-insights">10. Business Insights</h2>
+<p>The analysis highlights several patterns that are relevant to customer retention:</p>
+<ol>
+<li>Month-to-month customers have a higher churn rate than customers on longer contracts.</li>
+<li>Customers in their first year have the highest observed churn rate.</li>
+<li>Electronic-check users have the highest churn rate among the payment methods analyzed.</li>
+<li>Fiber-optic customers have a higher observed churn rate than DSL customers.</li>
+<li>Customers without technical support have a higher observed churn rate than customers with support.</li>
+<li>Churned customers have shorter average tenure and higher average monthly charges than retained customers.</li>
+</ol>
+<p>These results identify customer segments that could benefit from further investigation.</p>
+<h2 id="11-business-recommendations">11. Business Recommendations</h2>
+<p>Based on the observed patterns, the following actions could be evaluated:</p>
+<ul>
+<li>Improve onboarding and early engagement for new customers.</li>
+<li>Investigate retention offers and contract options for month-to-month customers.</li>
+<li>Review billing experience and payment preferences among electronic-check users.</li>
+<li>Investigate pricing, service quality, and customer expectations among fiber-optic users.</li>
+<li>Evaluate customer support availability and resolution quality.</li>
+<li>Monitor churn KPIs regularly to assess whether retention initiatives are associated with improvements.</li>
+</ul>
+<p>These are recommendations for further investigation rather than proof that any single factor causes churn.</p>
+<h2 id="12-project-files">12. Project Files</h2>
+<p>The project is organized as follows:</p>
+<pre class="hljs"><code><div>telco_customer_churn_project/
+├── dashboard/
+│   └── Telco_Customer_Churn_Analytics.pbix
+├── data/
+│   ├── raw/
+│   │   └── Telco-Customer-Churn.csv
+│   └── processed/
+│       └── Telco-Customer-Churn-Cleaned.csv
+├── notebooks/
+│   └── 01_Data_Cleaning.ipynb
+├── report/
+│   └── Telco_Customer_Churn_Analysis_Report.md
+├── sql/
+│   └── telco_churn_analysis.sql
+└── README.md
+</div></code></pre>
+<h2 id="13-conclusion">13. Conclusion</h2>
+<p>This project demonstrates an end-to-end data analytics workflow, from data cleaning and exploratory analysis to SQL validation and interactive Power BI reporting.</p>
+<p>It showcases practical skills in Python, Pandas, MySQL, data visualization, KPI development, dashboard design, and communicating business insights.</p>
+<p>The results provide a starting point for further investigation into customer retention strategies.</p>
+<h2 id="14-disclaimer">14. Disclaimer</h2>
+<p>This project uses a public sample dataset for educational and portfolio purposes. The findings reflect the dataset analyzed and should not automatically be generalized to all telecommunications businesses.</p>
+<p>The observed relationships are descriptive and do not independently establish causal factors behind customer churn.</p>
+
+</body>
+</html>
